@@ -1,5 +1,5 @@
 ---
-description: 현재 브랜치의 커밋되지 않은 변경사항을 확인하라.
+description: 변경사항을 커밋하고 원격에 푸시한 뒤 PR을 생성한다.
 argument-hint: ""
 allowed-tools: Bash(git:*), Bash(gh:*)
 ---
