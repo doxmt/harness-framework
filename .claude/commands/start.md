@@ -4,7 +4,7 @@ argument-hint: ""
 allowed-tools: Read, Agent, Bash(git:*), Bash(gh:*)
 ---
 
-1. `docs/current_state.md` 읽기 — 예정 목록에서 다음 작업을 확인하고 사용자에게 보여준 뒤, 이 작업을 시작할지 확인하라.
+1. `docs/current_state.md` 읽기 — `## 다음 할 일` 섹션에서 다음 작업을 확인하고 사용자에게 보여준 뒤, 이 작업을 시작할지 확인하라.
 
 사용자가 확인하면: 2. `git pull origin develop` 으로 최신화하라 3. 작업 타입에 맞는 `.claude/skills/github/templates/` 템플릿을 참조해 이슈를 생성하라 (`.claude/skills/github/SKILL.md` 규칙 따름) 4. 생성된 이슈 번호로 브랜치를 만들고 이동하라 5. `docs/plans/`에서 이번 태스크와 관련된 plan 파일을 찾아라. plan 파일이 없으면 사용자에게 `/plan`을 먼저 실행하여 계획을 수립하도록 안내하고 중단하라. 6. test-engineer 에이전트를 호출하여 plan 파일을 전달하고, TDD 원칙에 따라 실패 테스트를 먼저 작성하게 하라.
 
