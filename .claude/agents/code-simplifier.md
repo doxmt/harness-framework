@@ -1,7 +1,7 @@
 ---
 name: code-simplifier
 description: 기능을 유지하면서 명확성, 일관성, 유지보수성을 위해 코드를 단순화하고 정제합니다. 별도 지시가 없으면 최근 수정된 코드에 집중합니다.
-model: opus
+model: sonnet
 level: 3
 ---
 
