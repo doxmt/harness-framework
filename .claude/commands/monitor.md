@@ -12,6 +12,11 @@ PIPE_PATH="$(pwd)/.claude/logs/agents.pipe"
 [ -p "$PIPE_PATH" ] || mkfifo "$PIPE_PATH"
 LOG_PATH="$PIPE_PATH"
 
+# env var 없을 경우 cmux identify로 폴백
+if [ -z "${CMUX_SURFACE_ID:-}" ]; then
+  CMUX_SURFACE_ID=$(cmux identify 2>/dev/null | grep -o '"surface_ref" : "surface:[^"]*"' | head -1 | grep -o 'surface:[^"]*')
+fi
+
 if [ -z "${CMUX_SURFACE_ID:-}" ]; then
   echo "cmux 세션 안에서 실행해주세요."
   exit 0
