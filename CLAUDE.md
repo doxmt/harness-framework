@@ -23,6 +23,14 @@
 - {직접 import하면 안 되는 모듈}
 - {데이터 흐름/상태 관리/서버-클라이언트 경계}
 
+## Agent Teams
+
+Agent Teams가 활성화된 세션에서 사용자가 "팀 모드", "Agent Teams"라고 요청하거나 요청에 "conductor"를 포함하면 일반 Agent subagent 호출로 대체하지 않는다.
+
+반드시 TeamCreate로 팀을 만든 뒤 conductor를 teammate로 spawn하고, 이후 필요한 작업자도 같은 팀의 teammate로 생성한다. conductor는 계획만 하며, team lead가 teammate 생성과 조율을 담당한다.
+
+Agent Teams가 활성화되지 않은 세션에서는 conductor와 팀 관련 도구를 사용하지 않는다.
+
 ## Do Not
 
 > 사용자가 반복 실수나 잘못된 가정을 지적하면, 다음 세션에서 반복하지 않도록 이 섹션에 짧게 추가한다.
