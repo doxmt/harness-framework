@@ -13,7 +13,7 @@ disable-model-invocation: true
 3. 이슈 번호로 브랜치 생성 (`develop` 기점)
 4. 작업 & 커밋
 5. PR 생성 (`develop` 기준)
-6. code-reviewer 호출 → 리뷰 결과 확인
+6. `/pr-review` 실행 → `docs/pr-review.md` 리뷰 결과 확인
 7. 수정 후 커밋 & 푸시
 8. Squash merge → 브랜치 삭제 → `git pull origin develop`
 
