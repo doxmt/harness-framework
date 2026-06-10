@@ -100,6 +100,29 @@ has_test_for() {
   return 1
 }
 
+has_py_test_for() {
+  local file_path="$1"
+  local dir_name base_name parent_dir candidate
+
+  dir_name=$(dirname "$file_path")
+  base_name=$(basename "$file_path" .py)
+  parent_dir=$(dirname "$dir_name")
+
+  for candidate in \
+    "${dir_name}/test_${base_name}.py" \
+    "${dir_name}/${base_name}_test.py" \
+    "${dir_name}/tests/test_${base_name}.py" \
+    "${dir_name}/tests/${base_name}_test.py" \
+    "${parent_dir}/tests/test_${base_name}.py" \
+    "${parent_dir}/tests/${base_name}_test.py" \
+    "${PROJECT_ROOT}/tests/test_${base_name}.py" \
+    "${PROJECT_ROOT}/tests/${base_name}_test.py"; do
+    [ -f "$candidate" ] && return 0
+  done
+
+  return 1
+}
+
 while IFS=$'\t' read -r action file_path; do
   [ -z "$file_path" ] && continue
   [ "$action" = "delete" ] && continue
@@ -121,10 +144,21 @@ while IFS=$'\t' read -r action file_path; do
   esac
 
   case "$file_path" in
+    */__init__.py|*/conftest.py|*/setup.py|*/manage.py|*/settings.py|*/migrations/*|*/__pycache__/*) continue ;;
+  esac
+
+  case "$file_path" in
     *.ts|*.tsx|*.js|*.jsx)
       if ! has_test_for "$file_path"; then
         base_name=$(basename "$file_path" | sed -E 's/\.(ts|tsx|js|jsx)$//')
         deny "TDD GUARD: '${base_name}'에 대한 테스트 파일이 존재하지 않습니다. 구현 코드를 작성하기 전에 테스트를 먼저 작성하세요. (테스트 파일 예: ${base_name}.test.ts)"
+        exit 0
+      fi
+      ;;
+    *.py)
+      if ! has_py_test_for "$file_path"; then
+        base_name=$(basename "$file_path" .py)
+        deny "TDD GUARD: '${base_name}'에 대한 테스트 파일이 존재하지 않습니다. 구현 코드를 작성하기 전에 테스트를 먼저 작성하세요. (테스트 파일 예: test_${base_name}.py)"
         exit 0
       fi
       ;;
