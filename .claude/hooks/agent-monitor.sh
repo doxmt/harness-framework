@@ -5,22 +5,14 @@
 set -u
 
 LOG_DIR=".claude/logs"
-PIPE="${LOG_DIR}/agents.pipe"
+LOG_FILE="${LOG_DIR}/agents.log"
 mkdir -p "$LOG_DIR"
-if [ -e "$PIPE" ] && [ ! -p "$PIPE" ]; then rm -f "$PIPE"; fi
-[ -p "$PIPE" ] || mkfifo "$PIPE"
 
-INPUT=$(cat)
-
-if [ -z "$INPUT" ]; then
-  exit 0
-fi
-
-AGENT_INFO=$(python3 - "$INPUT" <<'PY'
+AGENT_INFO=$(python3 -c '
 import json, sys
 
 try:
-    payload = json.loads(sys.argv[1])
+    payload = json.load(sys.stdin)
 except Exception:
     sys.exit(0)
 
@@ -29,25 +21,24 @@ subagent_type = tool_input.get("subagent_type") or ""
 description = tool_input.get("description") or ""
 
 if subagent_type:
-    desc_short = description[:80] if description else ""
+    desc_short = description[:80].replace("\n", " ") if description else ""
     print(f"{subagent_type}|{desc_short}")
-PY
-)
+')
 
 if [ -z "$AGENT_INFO" ]; then
   exit 0
 fi
 
 AGENT_NAME="${AGENT_INFO%%|*}"
-AGENT_DESC="${AGENT_INFO##*|}"
+AGENT_DESC="${AGENT_INFO#*|}"
 
 TIMESTAMP=$(date "+%H:%M:%S")
 
 if [ -n "$AGENT_DESC" ]; then
-  { echo "[${TIMESTAMP}] ▶ ${AGENT_NAME} — ${AGENT_DESC}" > "$PIPE"; } 2>/dev/null &
+  echo "[${TIMESTAMP}] ▶ ${AGENT_NAME} — ${AGENT_DESC}" >> "$LOG_FILE"
   cmux notify --title "▶ ${AGENT_NAME}" --body "${AGENT_DESC}" 2>/dev/null || true
 else
-  { echo "[${TIMESTAMP}] ▶ ${AGENT_NAME}" > "$PIPE"; } 2>/dev/null &
+  echo "[${TIMESTAMP}] ▶ ${AGENT_NAME}" >> "$LOG_FILE"
   cmux notify --title "▶ ${AGENT_NAME}" --body "실행 중..." 2>/dev/null || true
 fi
 

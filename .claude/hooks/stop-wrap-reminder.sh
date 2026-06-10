@@ -1,9 +1,19 @@
 #!/bin/bash
-# 세션 종료 전 /wrap 누락 감지 — 스테이징된 변경사항이 있으면 알림
+# 미커밋 변경 알림 — Stop은 매 턴 실행되므로 30분에 한 번만 알린다
 
-STAGED=$(git diff --cached --name-only 2>/dev/null)
-UNSTAGED=$(git diff --name-only 2>/dev/null)
+LOG_DIR=".claude/logs"
+STAMP="${LOG_DIR}/stop-reminder.stamp"
+mkdir -p "$LOG_DIR"
 
-if [ -n "$STAGED" ] || [ -n "$UNSTAGED" ]; then
-  cmux notify --title "harness" --body "/wrap을 실행하지 않았습니다. 변경사항이 남아 있습니다." 2>/dev/null || true
+# untracked 포함 전체 변경 감지
+CHANGES=$(git status --porcelain 2>/dev/null)
+[ -z "$CHANGES" ] && exit 0
+
+if [ -f "$STAMP" ]; then
+  LAST=$(stat -f %m "$STAMP" 2>/dev/null || stat -c %Y "$STAMP" 2>/dev/null || echo 0)
+  NOW=$(date +%s)
+  [ $((NOW - LAST)) -lt 1800 ] && exit 0
 fi
+
+touch "$STAMP"
+cmux notify --title "harness" --body "커밋되지 않은 변경사항이 있습니다. /wrap과 커밋 여부를 확인하세요." 2>/dev/null || true
