@@ -1,20 +1,19 @@
 ---
 description: 이번 작업 세션을 마무리하고 문서를 업데이트하라.
 argument-hint: ""
-allowed-tools: Bash(cat:*), Bash(git rev-parse:*)
+allowed-tools: Read, Edit, Bash(cat:*), Bash(git rev-parse:*)
 ---
 
 이번 세션을 마무리합니다. 아래 순서대로 진행하세요.
 
-**중요: 세션에서 한 작업은 대화 내용에서 바로 파악하세요. 파악을 위해 파일을 읽지 마세요.**
+**중요: 세션에서 한 작업은 대화 내용에서 바로 파악하세요. 작업 내용 파악을 위해 파일을 읽지 마세요.** (3·5단계에서 기존 문서를 수정할 때만 해당 파일을 읽습니다.)
 
 ## 1. work_log.md에 이번 세션 append
 
 Bash heredoc으로 바로 추가 (읽기 없이):
 
 ```bash
-PROJ=$(git rev-parse --show-toplevel)
-cat >> "$PROJ/docs/work_log.md" << 'EOF'
+cat >> "$(git rev-parse --show-toplevel)/docs/work_log.md" << 'EOF'
 
 ## YYYY-MM-DD
 - (완료한 작업 한 줄씩)
@@ -29,8 +28,7 @@ EOF
 Bash heredoc으로 바로 덮어쓰기 (읽기 없이):
 
 ```bash
-PROJ=$(git rev-parse --show-toplevel)
-cat > "$PROJ/docs/current_state.md" << 'EOF'
+cat > "$(git rev-parse --show-toplevel)/docs/current_state.md" << 'EOF'
 # 현재 상태
 
 마지막 갱신: YYYY-MM-DD
@@ -48,15 +46,10 @@ EOF
 
 ## 3. architecture.md 갱신 (아키텍처 변경이 있었던 경우에만)
 
-이번 세션에서 기술 스택, 디렉토리 구조, 패턴, 데이터 흐름 등 아키텍처 관련 변경이 있었다면 덮어쓰기:
+이번 세션에서 기술 스택, 디렉토리 구조, 패턴, 데이터 흐름 등 아키텍처 관련 변경이 있었다면:
 
-```bash
-PROJ=$(git rev-parse --show-toplevel)
-cat > "$PROJ/docs/architecture.md" << 'EOF'
-# 아키텍처
-(현재 아키텍처 전체 내용)
-EOF
-```
+1. `docs/architecture.md`를 Read로 읽는다 — 통째로 덮어쓰면 변경 없는 섹션이 유실되므로 반드시 먼저 읽는다.
+2. 변경된 섹션만 Edit으로 수정한다.
 
 변경이 없었다면 이 단계는 건너뜁니다.
 
@@ -65,8 +58,7 @@ EOF
 이번 세션에서 새로운 기술 결정(라이브러리 선택, 패턴 채택, 구조 변경 등)이 있었다면 추가:
 
 ```bash
-PROJ=$(git rev-parse --show-toplevel)
-cat >> "$PROJ/docs/adr.md" << 'EOF'
+cat >> "$(git rev-parse --show-toplevel)/docs/adr.md" << 'EOF'
 
 ---
 
@@ -84,7 +76,7 @@ EOF
 
 ## 5. prd.md 갱신 (제품 범위/목표 변경이 있었던 경우에만)
 
-이번 세션에서 기능 추가/제거, 성공 기준 변경, MVP 범위 조정 등이 있었다면 해당 섹션만 수정합니다.
+이번 세션에서 기능 추가/제거, 성공 기준 변경, MVP 범위 조정 등이 있었다면 `docs/prd.md`를 Read로 읽고 해당 섹션만 Edit으로 수정합니다.
 변경이 없었다면 이 단계는 건너뜁니다.
 
 완료되면 "wrap 완료 ✓" 라고 출력하세요.
