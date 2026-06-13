@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/agent-result.sh"
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/agent-result.sh\""
           }
         ]
       }
@@ -16,7 +16,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/stop-wrap-reminder.sh"
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/stop-wrap-reminder.sh\""
           }
         ]
       }
@@ -27,7 +27,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/tdd-guard.sh"
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/tdd-guard.sh\""
           }
         ]
       },
@@ -36,7 +36,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash .claude/hooks/agent-monitor.sh"
+            "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/agent-monitor.sh\""
           }
         ]
       }
