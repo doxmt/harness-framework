@@ -4,7 +4,8 @@
 
 set -u
 
-LOG_DIR=".claude/logs"
+PROJECT_ROOT="${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null || pwd)}"
+LOG_DIR="${PROJECT_ROOT}/.claude/logs"
 LOG_FILE="${LOG_DIR}/agents.log"
 mkdir -p "$LOG_DIR"
 
